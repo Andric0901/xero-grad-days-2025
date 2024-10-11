@@ -14,10 +14,10 @@ class Invoice:
 
 
 def generate_invoices(tax_rate_list: list[float],
-                      repeat: int = 10,
+                      num_invoices: int = 10,
                       amount: int = 100) -> list[Invoice]:
     generated_list = []
-    for _ in range(repeat):
+    for _ in range(num_invoices):
         random_amount = amount
         random_tax_rate = random.choice(tax_rate_list)
         new_invoice = Invoice(random_amount, random_tax_rate)
