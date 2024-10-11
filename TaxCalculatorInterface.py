@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from Invoice import Invoice
 
 
 class TaxCalculatorInterface(metaclass=ABCMeta):
@@ -6,7 +7,16 @@ class TaxCalculatorInterface(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def CalculateTax(self):
+    def CalculateTax(self, orders: list[Invoice]) -> dict[str, tuple[float, float]]:
+        """Abstract method for calculating tax.
+
+        Parameters:
+            - orders (list[Invoice]): A list of Invoices as specified in the description
+
+        Returns:
+            - A dictionary containing the uuid (of the invoice) as the key
+            and a tuple of tax rate and total, respectively
+        """
         raise NotImplementedError
 
 
