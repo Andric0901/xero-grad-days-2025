@@ -7,7 +7,7 @@ class TaxCalculatorInterface:
         pass
 
     def CalculateTax(self, orders: list[Invoice]) -> dict[str, float]:
-        """Abstract method for calculating tax.
+        """A function to calculate tax.
 
         Parameters:
             - orders (list[Invoice]): A list of Invoices as specified in the description

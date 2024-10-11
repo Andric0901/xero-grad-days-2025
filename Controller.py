@@ -4,6 +4,7 @@ from TaxCalculatorCA import TaxCalculatorCA
 from Invoice import generate_invoices
 
 
+# Demo purposes only, real life usage will vary
 def main():
     nz_invoices = generate_invoices([1, 2, 3])
     ca_invoices = generate_invoices([4, 5, 6])
