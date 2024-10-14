@@ -6,6 +6,7 @@ from TaxCalculatorInterface import TaxCalculatorInterface
 class TaxCalculatorCA(TaxCalculatorInterface):
     def __init__(self):
         super().__init__()
+        self.name = "CA"
 
     def calculate_tax_logic(self, order: Invoice) -> float:
         return order.amount * order.tax_rate + order.amount + 4000

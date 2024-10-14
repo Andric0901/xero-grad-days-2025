@@ -4,7 +4,7 @@ from Invoice import Invoice
 
 class TaxCalculatorInterface:
     def __init__(self):
-        pass
+        self.name = "Interface"
 
     @abstractmethod
     def calculate_tax_logic(self, order: Invoice) -> float:
