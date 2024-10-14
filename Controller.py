@@ -2,6 +2,7 @@ from TaxCalculatorNZ import TaxCalculatorNZ
 from TaxCalculatorUS import TaxCalculatorUS
 from TaxCalculatorCA import TaxCalculatorCA
 from Invoice import generate_invoices
+from TaxCalculatorInterface import CalculateTax
 
 
 # Demo purposes only, real life usage will vary
@@ -14,9 +15,10 @@ def main():
     calculator_ca = TaxCalculatorCA()
     calculator_us = TaxCalculatorUS()
 
-    result_nz = calculator_nz.CalculateTax(nz_invoices)
-    result_ca = calculator_ca.CalculateTax(ca_invoices)
-    result_us = calculator_us.CalculateTax(us_invoices)
+    # Demo for polymorphism
+    result_nz = CalculateTax(nz_invoices, calculator_nz)
+    result_ca = CalculateTax(ca_invoices, calculator_ca)
+    result_us = CalculateTax(us_invoices, calculator_us)
 
     return result_nz, result_ca, result_us
 
