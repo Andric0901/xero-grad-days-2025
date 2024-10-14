@@ -1,8 +1,8 @@
+from Invoice import generate_invoices
+from TaxCalculatorInterface import CalculateTax
 from TaxCalculatorNZ import TaxCalculatorNZ
 from TaxCalculatorUS import TaxCalculatorUS
 from TaxCalculatorCA import TaxCalculatorCA
-from Invoice import generate_invoices
-from TaxCalculatorInterface import CalculateTax
 
 
 # Demo purposes only, real life usage will vary
