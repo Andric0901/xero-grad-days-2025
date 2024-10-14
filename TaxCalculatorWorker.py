@@ -1,4 +1,5 @@
 import time
+import random
 from threading import Thread
 from queue import Queue
 from Invoice import Invoice
@@ -8,6 +9,19 @@ from TaxCalculatorNZ import TaxCalculatorNZ
 from TaxCalculatorUS import TaxCalculatorUS
 from TaxCalculatorCA import TaxCalculatorCA
 import TaxCalculatorTaskHandler
+
+from logtail import LogtailHandler
+import logging
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+handler = LogtailHandler(source_token=os.getenv('SOURCE_TOKEN'))
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.handlers = []
+logger.addHandler(handler)
 
 STATUS_WORKING = "working"
 STATUS_BROKEN = "broken"
@@ -33,22 +47,35 @@ class TaxCalculatorWorker(Thread):
                     print(f"\nStopping worker {self.worker_id}")
                     self.running = False
                 else:
-                    self.status = STATUS_WORKING
+                    start_time = time.time()
                     orders, calculator = task_data[1], task_data[2]
+                    self.status = STATUS_WORKING + f" on {task_name} {calculator.name}"
+                    time.sleep(1 * self.worker_id + random.random() * 5)
                     # Execute the task based on the task name
                     result = self.execute_task(task_name, orders, calculator)
-                    print()
+                    print(f"by Worker {self.worker_id}")
                     print(result)
-                self.status = STATUS_IDLE
-                self.task_queue.task_done()
+                    self.status = STATUS_IDLE
+                    self.task_queue.task_done()
+                    end_time = time.time()
+                    logger.info(f"Finished running task for Worker {self.worker_id}", extra={
+                        "metrics": {"name": f"worker{self.worker_id}.success_running_task",
+                                    "duration": end_time - start_time}
+                    })
             except Exception as e:
+                start_time = time.time()
                 # Imitate broken worker
                 self.status = STATUS_BROKEN
                 print(f"\nWorker {self.worker_id} Broken")
-                time.sleep(10)
+                time.sleep(2 * self.worker_id + random.random() * 8)
                 # Imitate restart
                 self.status = STATUS_IDLE
                 print(f"\nWorker {self.worker_id} Restarted")
+                end_time = time.time()
+                logger.error(f"Error running task for Worker {self.worker_id}", extra={
+                    "metrics": {"name": f"worker{self.worker_id}.error_running_task",
+                                "duration": end_time - start_time}
+                })
                 self.task_queue.task_done()
 
     def execute_task(self,
@@ -90,6 +117,12 @@ def task_input_loop(workers: list[TaxCalculatorWorker], task_queue: Queue, num_w
             task_queue.put(("task_calculate_tax_slow", default_orders, default_calculator))
         elif task.lower() == 'status':
             check_worker_status(workers)
+        elif task.lower() == 'mega_break':
+            for _ in range(30):
+                task_queue.put(("task_break_worker", default_orders, default_calculator))
+        elif task.lower() == 'mega_task':
+            for _ in range(30):
+                task_queue.put(("task_calculate_tax", default_orders, default_calculator))
         else:
             task_queue.put((task, default_orders, default_calculator))
 
