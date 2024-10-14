@@ -13,9 +13,11 @@ class Invoice:
         return f"Invoice uuid: {self.uuid}, Amount: {self.amount}, Tax Rate: {self.tax_rate}"
 
 
-def generate_invoices(tax_rate_list: list[float],
+def generate_invoices(tax_rate_list: list[float] = None,
                       num_invoices: int = 10,
                       amount: int = 100) -> list[Invoice]:
+    if tax_rate_list is None:
+        tax_rate_list = [1, 2, 3]
     generated_list = []
     for _ in range(num_invoices):
         random_amount = amount
