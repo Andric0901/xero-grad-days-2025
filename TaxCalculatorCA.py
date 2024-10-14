@@ -8,4 +8,4 @@ class TaxCalculatorCA(TaxCalculatorInterface):
         super().__init__()
 
     def calculate_tax_logic(self, order: Invoice) -> float:
-        return order.amount * order.tax_rate + order.amount + 1000
+        return order.amount * order.tax_rate + order.amount + 4000
