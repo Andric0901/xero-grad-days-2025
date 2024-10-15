@@ -50,10 +50,10 @@ class TaxCalculatorWorker(Thread):
                     start_time = time.time()
                     orders, calculator = task_data[1], task_data[2]
                     self.status = STATUS_WORKING + f" on {task_name} {calculator.name}"
-                    time.sleep(1 * self.worker_id + random.random() * 5)
                     # Execute the task based on the task name
                     result = self.execute_task(task_name, orders, calculator)
-                    print(f"by Worker {self.worker_id}")
+                    time.sleep(1 * self.worker_id + random.random() * 5)
+                    print(f"\nTask done by Worker {self.worker_id}")
                     print(result)
                     self.status = STATUS_IDLE
                     self.task_queue.task_done()
