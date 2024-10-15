@@ -9,4 +9,5 @@ class TaxCalculatorCA(TaxCalculatorInterface):
         self.name = "CA"
 
     def calculate_tax_logic(self, order: Invoice) -> float:
+        # return order.amount * order.tax_rate + order.amount + 400000
         return order.amount * order.tax_rate + order.amount + 4000
