@@ -17,11 +17,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-handler = LogtailHandler(source_token=os.getenv('SOURCE_TOKEN'))
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-logger.handlers = []
-logger.addHandler(handler)
+DEBUG = True
+if os.getenv('SOURCE_TOKEN') is None:
+    print("source token not found, not logging")
+    DEBUG = False
+
+if DEBUG:
+    handler = LogtailHandler(source_token=os.getenv('SOURCE_TOKEN'))
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    logger.handlers = []
+    logger.addHandler(handler)
 
 STATUS_WORKING = "working"
 STATUS_BROKEN = "broken"
@@ -58,10 +64,11 @@ class TaxCalculatorWorker(Thread):
                     self.status = STATUS_IDLE
                     self.task_queue.task_done()
                     end_time = time.time()
-                    logger.info(f"Finished running task for Worker {self.worker_id}", extra={
-                        "metrics": {"name": f"worker{self.worker_id}.success_running_task",
-                                    "duration": end_time - start_time}
-                    })
+                    if DEBUG:
+                        logger.info(f"Finished running task for Worker {self.worker_id}", extra={
+                            "metrics": {"name": f"worker{self.worker_id}.success_running_task",
+                                        "duration": end_time - start_time}
+                        })
             except Exception as e:
                 start_time = time.time()
                 # Imitate broken worker
@@ -72,10 +79,11 @@ class TaxCalculatorWorker(Thread):
                 self.status = STATUS_IDLE
                 print(f"\nWorker {self.worker_id} Restarted")
                 end_time = time.time()
-                logger.error(f"Error running task for Worker {self.worker_id}", extra={
-                    "metrics": {"name": f"worker{self.worker_id}.error_running_task",
-                                "duration": end_time - start_time}
-                })
+                if DEBUG:
+                    logger.error(f"Error running task for Worker {self.worker_id}", extra={
+                        "metrics": {"name": f"worker{self.worker_id}.error_running_task",
+                                    "duration": end_time - start_time}
+                    })
                 self.task_queue.task_done()
 
     def execute_task(self,
