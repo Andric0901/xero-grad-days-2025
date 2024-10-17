@@ -6,4 +6,5 @@
 1. Install all requirements:
 ```pip install -r requirements.txt```
 2. (Optional for logging) Get the source token from BetterStack, following the guide here: https://betterstack.com/docs/logs/python/#logging-from-python
+3. (Optional for logging) Put the source token in the `.env` file as `SOURCE_TOKEN="insert token here"`
 3. Run a few files and see how it works!
